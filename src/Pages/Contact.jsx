@@ -14,45 +14,42 @@ const Contact = () => {
   const [currentAnimation, setCurrentAnimation] = useState("idle");
   const { alert, showAlert, hideAlert } = useAlert();
 
+  // Handle form field changes
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  // Animations
   const handleFocus = () => setCurrentAnimation("walk");
   const handleBlur = () => setCurrentAnimation("idle");
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setCurrentAnimation("hit");
 
-    try {
-      const serviceId = process.env.VITE_APP_EMAILJS_SERVICE_ID;
-      const templateId = process.env.VITE_APP_EMAILJS_TEMPLATE_ID;
-      const publicKey = process.env.VITE_APP_EMAILJS_PUBLIC_KEY;
+    // Trim the message to prevent "payload too large" errors
+    const trimmedMessage = form.message.slice(0, 1000);
 
-      if (!serviceId || !templateId || !publicKey) {
-        throw new Error("Missing EmailJS environment variables!");
-      }
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Delay to avoid function timeout
 
       await emailjs.send(
-        serviceId,
-        templateId,
+        process.env.VITE_APP_EMAILJS_SERVICE_ID || import.meta.env.VITE_APP_EMAILJS_SERVICE_ID,
+        process.env.VITE_APP_EMAILJS_TEMPLATE_ID || import.meta.env.VITE_APP_EMAILJS_TEMPLATE_ID,
         {
           name: form.name,
           to_name: "Moulya",
-          message: form.message || "No message provided", // Fallback value
+          message: trimmedMessage,
           email: form.email,
           to_email: "moulyahegde2004@gmail.com",
         },
-        publicKey
+        process.env.VITE_APP_EMAILJS_PUBLIC_KEY || import.meta.env.VITE_APP_EMAILJS_PUBLIC_KEY
       );
 
-      showAlert({
-        show: true,
-        text: "Message Sent Successfully",
-        type: "success",
-      });
+      setIsLoading(false);
+      showAlert({ show: true, text: "Message Sent Successfully", type: "success" });
 
       setTimeout(() => {
         hideAlert();
@@ -60,15 +57,10 @@ const Contact = () => {
         setForm({ name: "", email: "", message: "" });
       }, 3000);
     } catch (error) {
-      console.error("Email sending error:", error);
-      showAlert({
-        show: true,
-        text: "Failed to send message. Please try again later.",
-        type: "danger",
-      });
-    } finally {
       setIsLoading(false);
       setCurrentAnimation("idle");
+      console.error("EmailJS Error:", error);
+      showAlert({ show: true, text: "Message failed to send. Please try again.", type: "danger" });
     }
   };
 
@@ -76,6 +68,7 @@ const Contact = () => {
     <>
       <section className="relative flex lg:flex-row flex-col max-w-full mx-auto sm:p-16 pb-12 pt-28 px-8 min-h-[calc(100vh-80px)] h-full bg-gradient-to-b from-[#0f172a] to-[#1e293b] text-white">
         {alert.show && <Alert {...alert} />}
+        
         {/* Left Side: Contact Form */}
         <div className="flex-1 min-w-[50%] flex flex-col">
           <h1 className="sm:text-5xl text-3xl font-bold sm:leading-snug font-poppins text-gray-100">
@@ -167,13 +160,7 @@ const Contact = () => {
           {socialLinks
             .filter((link) => link.name !== "Contact") // Exclude Contact
             .map((link) => (
-              <a
-                key={link.name}
-                href={link.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-gray-300 hover:text-white transition duration-300"
-              >
+              <a key={link.name} href={link.link} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-gray-300 hover:text-white transition duration-300">
                 <img src={link.iconUrl} alt={link.name} className="w-5 h-5" />
                 <span>{link.name}</span>
               </a>
