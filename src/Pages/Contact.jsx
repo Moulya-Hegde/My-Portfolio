@@ -1,139 +1,66 @@
-import { Suspense, useRef, useState } from "react";
-import emailjs from "@emailjs/browser";
+import { Suspense, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import Fox from "../models/Fox";
 import Loader from "../components/Loader";
-import useAlert from "../hooks/useAlert";
-import Alert from "../components/Alert";
 import { socialLinks } from "../constants";
 
 const Contact = () => {
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
-  const [isLoading, setIsLoading] = useState(false);
-  const formRef = useRef(null);
   const [currentAnimation, setCurrentAnimation] = useState("idle");
-  const { alert, showAlert, hideAlert } = useAlert();
 
-  // Handle form field changes
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  // Handle hover animation
+  const handleHover = () => setCurrentAnimation("walk");
+  const handleLeave = () => setCurrentAnimation("idle");
 
-  // Animations
-  const handleFocus = () => setCurrentAnimation("walk");
-  const handleBlur = () => setCurrentAnimation("idle");
-
-  // Handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
+  // Handle link click (play 'hit' before opening)
+  const handleClick = (url) => {
     setCurrentAnimation("hit");
-
-    // Trim the message to prevent "payload too large" errors
-    const trimmedMessage = form.message.slice(0, 1000);
-
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Delay to avoid function timeout
-
-      await emailjs.send(
-        process.env.VITE_APP_EMAILJS_SERVICE_ID || import.meta.env.VITE_APP_EMAILJS_SERVICE_ID,
-        process.env.VITE_APP_EMAILJS_TEMPLATE_ID || import.meta.env.VITE_APP_EMAILJS_TEMPLATE_ID,
-        {
-          name: form.name,
-          to_name: "Moulya",
-          message: trimmedMessage,
-          email: form.email,
-          to_email: "moulyahegde2004@gmail.com",
-        },
-        process.env.VITE_APP_EMAILJS_PUBLIC_KEY || import.meta.env.VITE_APP_EMAILJS_PUBLIC_KEY
-      );
-
-      setIsLoading(false);
-      showAlert({ show: true, text: "Message Sent Successfully", type: "success" });
-
-      setTimeout(() => {
-        hideAlert();
-        setCurrentAnimation("idle");
-        setForm({ name: "", email: "", message: "" });
-      }, 3000);
-    } catch (error) {
-      setIsLoading(false);
-      setCurrentAnimation("idle");
-      console.error("EmailJS Error:", error);
-      showAlert({ show: true, text: "Message failed to send. Please try again.", type: "danger" });
-    }
+    setTimeout(() => {
+      window.open(url, "_blank");
+    }, 1000); // Give time for the animation to play
   };
 
   return (
     <>
       <section className="relative flex lg:flex-row flex-col max-w-full mx-auto sm:p-16 pb-12 pt-28 px-8 min-h-[calc(100vh-80px)] h-full bg-gradient-to-b from-[#0f172a] to-[#1e293b] text-white">
-        {alert.show && <Alert {...alert} />}
-        
-        {/* Left Side: Contact Form */}
-        <div className="flex-1 min-w-[50%] flex flex-col">
-          <h1 className="sm:text-5xl text-3xl font-bold sm:leading-snug font-poppins text-gray-100">
-            Get In Touch
+        {/* Left Section */}
+        <div className="flex-1 min-w-[50%] flex flex-col justify-center mt-12">
+          <h1 className="sm:text-5xl text-3xl font-semibold sm:leading-snug font-poppins text-left">
+            Get In Touch With{" "}
+            <span className="bg-gradient-to-r from-[#007CF0] to-[#00DFD8] bg-clip-text text-transparent font-semibold drop-shadow">
+              Me
+            </span>{" "}
+            
           </h1>
+          <p className="text-gray-300 text-lg mt-4 leading-relaxed">
+            Feel free to connect with me through my social links below.
+          </p>
 
-          <form onSubmit={handleSubmit} className="w-full flex flex-col gap-6 mt-10">
-            <label className="text-gray-300 text-lg font-medium">
-              Name
-              <input
-                type="text"
-                name="name"
-                className="bg-gray-800 border border-gray-600 text-gray-300 text-base rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-3 mt-2 shadow-lg shadow-blue-900/50 transition-all duration-300 outline-none"
-                placeholder="John Doe"
-                required
-                value={form.name}
-                onChange={handleChange}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
-              />
-            </label>
-
-            <label className="text-gray-300 text-lg font-medium">
-              Email
-              <input
-                type="email"
-                name="email"
-                className="bg-gray-800 border border-gray-600 text-gray-300 text-base rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-3 mt-2 shadow-lg shadow-blue-900/50 transition-all duration-300 outline-none"
-                placeholder="john@example.com"
-                required
-                value={form.email}
-                onChange={handleChange}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
-              />
-            </label>
-
-            <label className="text-gray-300 text-lg font-medium">
-              Message
-              <textarea
-                name="message"
-                rows="4"
-                className="bg-gray-800 border border-gray-600 text-gray-300 text-base rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full p-3 mt-2 shadow-lg shadow-blue-900/50 transition-all duration-300 outline-none"
-                placeholder="Write your message here..."
-                required
-                value={form.message}
-                onChange={handleChange}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
-              />
-            </label>
-
-            <button
-              type="submit"
-              className="text-white bg-gradient-to-r from-[#0072ff] to-[#00c6ff] hover:opacity-80 transition-opacity focus:ring-4 focus:outline-none focus:ring-blue-500 font-semibold rounded-md text-lg w-full sm:w-auto px-6 py-3 text-center shadow-md shadow-blue-500/50"
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-              disabled={isLoading}
-            >
-              {isLoading ? "Sending..." : "Send Message"}
-            </button>
-          </form>
+          {/* Social Links */}
+          <div className="flex flex-wrap gap-6 mt-6">
+            {socialLinks.map((link) => (
+              <button
+                key={link.name}
+                onClick={() =>
+                  handleClick(
+                    link.name === "Email"
+                      ? "https://mail.google.com/mail/?view=cm&fs=1&to=moulyahegde2004@gmail.com"
+                      : link.link
+                  )
+                }
+                onMouseEnter={handleHover}
+                onMouseLeave={handleLeave}
+                className="flex items-center gap-3 bg-gray-800 hover:bg-gray-700 px-5 py-3 rounded-lg transition-all duration-300 shadow-lg shadow-blue-900/50"
+              >
+                <img src={link.iconUrl} alt={link.name} className="w-6 h-6" />
+                <span className="text-gray-300 hover:text-white transition-all">
+                  {link.name}
+                </span>
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Right Side: 3D Model */}
+        {/* Right Section: 3D Fox Model */}
         <div className="lg:w-1/2 w-full lg:h-auto md:h-[550px] h-[350px]">
           <Canvas camera={{ position: [0, 0, 5], fov: 75, near: 0.1, far: 1000 }}>
             <directionalLight intensity={2.5} position={[0, 0, 1]} />
@@ -143,29 +70,24 @@ const Contact = () => {
                 currentAnimation={currentAnimation}
                 position={[0.5, 0.35, 0]}
                 rotation={[12.6, -0.6, 0]}
-                scale={[0.5, 0.5, 0.5]}
+                scale={[0.6, 0.6, 0.6]}
               />
             </Suspense>
           </Canvas>
         </div>
+        
       </section>
 
       {/* Footer */}
       <footer className="w-full flex flex-col items-center justify-center py-6 border-t border-gray-600 bg-[#0f172a] text-gray-400 text-xl">
+      <p className="text-xl text-center pb-2">moulyahegde2004@gmail.com</p>
         <p className="mb-2">
-          © {new Date().getFullYear()} <span className="text-white font-semibold">Moulya Hegde</span>. All rights reserved.
+          © {new Date().getFullYear()}{" "}
+          <span className="text-white font-semibold">Moulya Hegde</span>. All rights reserved.
         </p>
+        
 
-        <div className="flex gap-6">
-          {socialLinks
-            .filter((link) => link.name !== "Contact") // Exclude Contact
-            .map((link) => (
-              <a key={link.name} href={link.link} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-gray-300 hover:text-white transition duration-300">
-                <img src={link.iconUrl} alt={link.name} className="w-5 h-5" />
-                <span>{link.name}</span>
-              </a>
-            ))}
-        </div>
+        
       </footer>
     </>
   );

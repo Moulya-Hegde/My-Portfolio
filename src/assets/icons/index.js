@@ -24,8 +24,6 @@ import summiz from './summiz.svg'
 import threads from './threads.svg'
 import arrow from './arrow.svg'
 import contact from './contact.svg'
-import soundon from './soundon.png'
-import soundoff from './soundoff.png'
 import flutter from './flutter.svg'
 import c from './c.svg'
 import python from './python.svg'
@@ -33,6 +31,9 @@ import java from './java.svg'
 import dart from './dart.svg'
 import gcp from './gcp.svg'
 import insta from './insta.svg'
+import leetcode from './leetcode.png'
+import hackerrank from './hackerrank.png'
+import gfg from './gfg.png'
 export {
     css,
     express,
@@ -60,14 +61,14 @@ export {
     threads,
     arrow,
     contact,
-    soundon,
-    soundoff,
     flutter,
     c,
     python,
     java,
     dart,
     gcp,
-    insta
-
+    insta,
+    leetcode,
+    hackerrank,
+    gfg
 }

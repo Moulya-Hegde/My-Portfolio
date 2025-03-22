@@ -67,6 +67,18 @@ const Certificates = () => {
           <p className="text-gray-400 text-center col-span-full">No certificates found.</p>
         )}
       </div>
+      {/* Call-to-Action Section */}
+      <div className="mt-16 text-center bg-gradient-to-r from-[#9c0cf0] to-[#137f9d] text-white py-10 px-6 rounded-xl shadow-xl">
+        <h3 className="text-3xl font-extrabold tracking-wide">Have an Idea? Let’s Make It Happen! 🚀</h3>
+        <p className="mt-3 text-lg max-w-2xl mx-auto opacity-90">
+          Whether it's an innovative web app, an AI-powered solution, or something revolutionary, let's collaborate and build something extraordinary.
+        </p>
+        <a href="/contact">
+          <button className="mt-5 bg-white text-[#183f64] font-semibold px-7 py-3 rounded-lg shadow-md hover:bg-gray-100 transition-transform duration-300 hover:scale-105">
+            Let’s Talk →
+          </button>
+        </a>
+      </div>
     </section>
   );
 };

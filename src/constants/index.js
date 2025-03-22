@@ -20,7 +20,6 @@ import {dsatm_Maths,
   unstop_nationbuilding,} from '../assets/certificates';
 import {
   car,
-  contact,
   css,
   estate,
   express,
@@ -45,7 +44,11 @@ import {
   java,
   dart,
   gcp,
-  insta
+  insta,
+  twitter,
+  leetcode,
+  hackerrank,
+  gfg
 } from "../assets/icons";
 
 export const skills = [
@@ -143,9 +146,9 @@ export const skills = [
 
 export const socialLinks = [
   {
-    name: "Contact",
-    iconUrl: contact,
-    link: "/contact",
+    name: "Twitter",
+    iconUrl: twitter,
+    link: "https://x.com/MoulyaH1618",
   },
   {
     name: "GitHub",
@@ -161,6 +164,21 @@ export const socialLinks = [
     name: "Instagram",
     iconUrl: insta,
     link: "https://www.instagram.com/cameronblack161803?igsh=ajBlcjBtMmhhbTN0",
+  },
+  {
+    name: "LeetCode",
+    iconUrl: leetcode,
+    link: "https://leetcode.com/u/moulya_1618/",
+  },
+  {
+    name: "Hackerrank",
+    iconUrl: hackerrank,
+    link: "https://www.hackerrank.com/profile/cameronblack871",
+  },
+  {
+    name: "GeeksForGeeks",
+    iconUrl: gfg,
+    link: "https://www.geeksforgeeks.org/user/moulyahem4kc/",
   }
 ];
 
