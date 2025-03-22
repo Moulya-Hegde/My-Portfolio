@@ -1,4 +1,3 @@
-import { useState, useCallback } from "react";
 import { socialLinks } from "../constants";
 
 const Contact = () => {
