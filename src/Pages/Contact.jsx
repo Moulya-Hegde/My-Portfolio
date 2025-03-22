@@ -2,15 +2,6 @@ import { useState, useCallback } from "react";
 import { socialLinks } from "../constants";
 
 const Contact = () => {
-  const [currentAnimation, setCurrentAnimation] = useState("idle");
-
-  const handleClick = useCallback((url) => {
-    setCurrentAnimation("hit");
-
-    setTimeout(() => {
-      window.open(url, "_blank");
-    }, 700);
-  }, []);
 
   return (
     <>
@@ -35,9 +26,7 @@ const Contact = () => {
                 key={link.name}
                 onClick={() =>
                   handleClick(
-                    link.name === "Email"
-                      ? "https://mail.google.com/mail/?view=cm&fs=1&to=moulyahegde2004@gmail.com"
-                      : link.link
+                    link.link
                   )
                 }
                 className="flex items-center gap-3 bg-gray-800 hover:bg-gray-700 px-5 py-3 rounded-lg transition-all duration-300 shadow-lg shadow-blue-900/50"
@@ -56,7 +45,7 @@ const Contact = () => {
       <footer className="w-full flex flex-col items-center justify-center py-6 border-t border-gray-600 bg-[#0f172a] text-gray-400 text-xl">
         <p className="text-xl mb-2 font-italic text-white">moulyahegde2004@gmail.com</p>
         <p className="mb-2">
-          © {new Date().getFullYear()}{" "}
+          © 2025{" "}
           <span className="text-white font-semibold">Moulya Hegde</span>. All rights reserved.
         </p>
       </footer>
