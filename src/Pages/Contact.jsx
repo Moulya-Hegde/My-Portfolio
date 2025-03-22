@@ -1,29 +1,15 @@
-import { lazy,Suspense, useState, useCallback } from "react";
-import { Canvas } from "@react-three/fiber";
-
-import Loader from "../components/Loader";
+import { useState, useCallback } from "react";
 import { socialLinks } from "../constants";
-const Fox = lazy(() => import("../models/Fox"));
+
 const Contact = () => {
   const [currentAnimation, setCurrentAnimation] = useState("idle");
-
-  // Memoized event handlers to prevent unnecessary re-renders
-  const handleHover = useCallback(() => {
-    setCurrentAnimation("walk");
-  
-    // Reset to idle after 1 second
-    setTimeout(() => {
-      setCurrentAnimation("idle");
-    }, 6000);
-  }, []);
-  const handleLeave = useCallback(() => setCurrentAnimation("idle"), []);
 
   const handleClick = useCallback((url) => {
     setCurrentAnimation("hit");
 
     setTimeout(() => {
       window.open(url, "_blank");
-    }, 700); // Reduced delay for faster execution
+    }, 700);
   }, []);
 
   return (
@@ -54,8 +40,6 @@ const Contact = () => {
                       : link.link
                   )
                 }
-                onMouseEnter={handleHover}
-                onMouseLeave={handleLeave}
                 className="flex items-center gap-3 bg-gray-800 hover:bg-gray-700 px-5 py-3 rounded-lg transition-all duration-300 shadow-lg shadow-blue-900/50"
               >
                 <img src={link.iconUrl} alt={link.name} className="w-6 h-6" />
@@ -66,47 +50,15 @@ const Contact = () => {
             ))}
           </div>
         </div>
-
-        {/* Right Section: 3D Fox Model */}
-        <div className="lg:w-1/2 w-full lg:h-auto md:h-[550px] h-[350px]">
-          <Canvas camera={{ position: [0, 0, 5], fov: 75, near: 0.1, far: 1000 }}>
-            <directionalLight intensity={2} position={[0, 0, 1]} />
-            <ambientLight intensity={0.3} />
-            <Suspense fallback={<Loader />}>
-              <Fox
-                currentAnimation={currentAnimation}
-                position={[0.5, 0.35, 0]}
-                rotation={[12.6, -0.6, 0]}
-                scale={[0.5, 0.5, 0.5]}
-              />
-            </Suspense>
-          </Canvas>
-        </div>
       </section>
 
       {/* Footer */}
       <footer className="w-full flex flex-col items-center justify-center py-6 border-t border-gray-600 bg-[#0f172a] text-gray-400 text-xl">
+        <p className="text-xl mb-2 font-italic text-white">moulyahegde2004@gmail.com</p>
         <p className="mb-2">
           © {new Date().getFullYear()}{" "}
           <span className="text-white font-semibold">Moulya Hegde</span>. All rights reserved.
         </p>
-
-        <div className="flex gap-6">
-          {socialLinks
-            .filter((link) => link.name !== "Contact")
-            .map((link) => (
-              <a
-                key={link.name}
-                href={link.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-gray-300 hover:text-white transition duration-300"
-              >
-                <img src={link.iconUrl} alt={link.name} className="w-5 h-5" />
-                <span>{link.name}</span>
-              </a>
-            ))}
-        </div>
       </footer>
     </>
   );
